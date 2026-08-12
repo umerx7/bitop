@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { Withdrawal, Deposit, PaymentMethod } = require('../models/Wallet');
+const Transaction = require('../models/Transaction');
 const { protect, authorize } = require('../middleware/auth');
 const { validateWithdrawal, validateDeposit, validateObjectId, validatePagination } = require('../middleware/validation');
 const { sendWithdrawalConfirmationEmail } = require('../utils/email');
@@ -41,6 +42,53 @@ router.get('/deposits', protect, validatePagination, async (req, res) => {
   }
 });
 
+router.get('/transactions', protect, validatePagination, async (req, res) => {
+  try {
+    const { page = 1, limit = 20, type, currency } = req.query;
+    const query = { user: req.user._id };
+    if (type) query.type = type;
+    if (currency) query.currency = currency.toUpperCase();
+    
+    const transactions = await Deposit.find(query)
+      .sort({ createdAt: -1 })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+    
+    const total = await Deposit.countDocuments(query);
+    
+    res.json({
+      success: true,
+      transactions,
+      pagination: { page: parseInt(page), limit: parseInt(limit), total, pages: Math.ceil(total / limit) }
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+router.get('/deposit-assets', protect, async (req, res) => {
+  try {
+    const assets = [
+      { currency: 'BTC', name: 'Bitcoin', networks: ['BTC', 'BEP20', 'ERC20', 'TRC20'], icon: '₿', minDeposit: 0.0001, confirmations: 3 },
+      { currency: 'ETH', name: 'Ethereum', networks: ['ERC20', 'BEP20', 'ARBITRUM', 'OPTIMISM', 'POLYGON'], icon: 'Ξ', minDeposit: 0.001, confirmations: 12 },
+      { currency: 'USDT', name: 'Tether USD', networks: ['TRC20', 'ERC20', 'BEP20', 'SOLANA', 'POLYGON', 'ARBITRUM', 'OPTIMISM'], icon: '₮', minDeposit: 1, confirmations: 1 },
+      { currency: 'USDC', name: 'USD Coin', networks: ['ERC20', 'BEP20', 'SOLANA', 'POLYGON', 'ARBITRUM', 'OPTIMISM'], icon: '$', minDeposit: 1, confirmations: 1 },
+      { currency: 'BNB', name: 'BNB', networks: ['BEP20', 'BEP2'], icon: '▶', minDeposit: 0.01, confirmations: 1 },
+      { currency: 'SOL', name: 'Solana', networks: ['SOLANA'], icon: '◎', minDeposit: 0.01, confirmations: 1 },
+      { currency: 'XRP', name: 'XRP', networks: ['XRP'], icon: '✕', minDeposit: 20, confirmations: 1 },
+      { currency: 'ADA', name: 'Cardano', networks: ['CARDANO'], icon: '₳', minDeposit: 1, confirmations: 10 },
+      { currency: 'DOGE', name: 'Dogecoin', networks: ['DOGE'], icon: 'Ð', minDeposit: 50, confirmations: 1 },
+      { currency: 'MATIC', name: 'Polygon', networks: ['POLYGON', 'ERC20', 'BEP20'], icon: '◈', minDeposit: 1, confirmations: 1 },
+      { currency: 'DOT', name: 'Polkadot', networks: ['POLKADOT'], icon: '●', minDeposit: 1, confirmations: 1 },
+      { currency: 'AVAX', name: 'Avalanche', networks: ['AVALANCHE', 'ERC20'], icon: '▲', minDeposit: 0.01, confirmations: 1 }
+    ];
+    
+    res.json({ success: true, assets });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
 router.get('/deposit/address', protect, async (req, res) => {
   try {
     const { currency, network } = req.query;
@@ -51,7 +99,19 @@ router.get('/deposit/address', protect, async (req, res) => {
       ? Math.floor(Math.random() * 100000000).toString().padStart(9, '0') 
       : null;
     
-    res.json({ success: true, address, tag, network: network.toUpperCase() });
+    const minDeposits = { BTC: 0.0001, ETH: 0.001, USDT: 1, USDC: 1, BNB: 0.01, SOL: 0.01, XRP: 20, ADA: 1, DOGE: 50, MATIC: 1, DOT: 1, AVAX: 0.01 };
+    const confirmationsMap = { BTC: 3, ETH: 12, USDT: 1, USDC: 1, BNB: 1, SOL: 1, XRP: 1, ADA: 10, DOGE: 1, MATIC: 1, DOT: 1, AVAX: 1 };
+    
+    res.json({ 
+      success: true, 
+      address: { 
+        address, 
+        tag, 
+        network: network.toUpperCase(),
+        minDeposit: minDeposits[currency.toUpperCase()] || 1,
+        confirmations: confirmationsMap[currency.toUpperCase()] || 1
+      } 
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }

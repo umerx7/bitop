@@ -11,10 +11,14 @@ class App {
   }
 
   async init() {
-    await auth.init();
     this.authUnsubscribe = auth.subscribe((user, isAuthenticated) => {
       this.handleAuthChange(user, isAuthenticated);
     });
+    
+    await auth.init();
+    
+    // Manually trigger handleAuthChange for initial state
+    this.handleAuthChange(auth.user, auth.isAuthenticated);
 
     this.setupRouting();
     this.setupGlobalListeners();

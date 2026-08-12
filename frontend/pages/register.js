@@ -166,23 +166,12 @@ export default {
     this.clearError();
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ name, email, password, confirmPassword, referralCode })
-      });
+      const { default: auth } = await import('../utils/auth.js');
+      const response = await auth.register(name, email, password, referralCode);
 
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem('bitop_token', data.token);
-        localStorage.setItem('bitop_refresh_token', data.refreshToken);
-        localStorage.setItem('bitop_user', JSON.stringify(data.user));
-        
+      if (response.success) {
         window.location.href = '/dashboard';
       } else {
-        // Show specific validation errors if available
         if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
           const messages = data.errors.map(e => e.msg || e.message).join(', ');
           this.showError(messages);

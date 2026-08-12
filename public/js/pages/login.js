@@ -121,22 +121,17 @@ export default {
     this.clearError();
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email, password, rememberMe })
-      });
+      // Import auth manager dynamically
+      const { default: auth } = await import('../utils/auth.js');
+      const response = await auth.login(email, password, rememberMe);
 
-      const data = await response.json();
-
-      if (data.success) {
-        localStorage.setItem('bitop_token', data.token);
-        localStorage.setItem('bitop_refresh_token', data.refreshToken);
-        localStorage.setItem('bitop_user', JSON.stringify(data.user));
-        
+      if (response.success) {
+        // Auth manager handles token storage and user state
+        // The app will handle navigation via handleAuthChange
         window.location.href = '/dashboard';
       } else {
+        this.showError(response.message || 'Login failed');
+      }
     } catch (error) {
       this.showError('Network error. Please try again.');
     } finally {

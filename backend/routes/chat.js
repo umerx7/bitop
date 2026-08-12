@@ -5,6 +5,36 @@ const { protect, authorize } = require('../middleware/auth');
 const { validateChatMessage, validateObjectId, validatePagination } = require('../middleware/validation');
 const websocketService = require('../services/websocket');
 const User = require('../models/User');
+const multer = require('multer');
+const path = require('path');
+const crypto = require('crypto');
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, '../uploads/chat'));
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const name = crypto.randomBytes(16).toString('hex') + ext;
+    cb(null, name);
+  }
+});
+
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'application/pdf', 'text/plain', 'text/csv'];
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only images, PDF, and text files allowed.'), false);
+  }
+};
+
+const upload = multer({ 
+  storage, 
+  fileFilter,
+  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+});
 
 router.post('/session', protect, async (req, res) => {
   try {

@@ -64,11 +64,17 @@ export default {
 
   async loadChatHistory() {
     try {
-      const response = await fetch('/api/chat/history?limit=50', { credentials: 'include' });
-      const data = await response.json();
-      if (data.success) {
-        this.messages = data.messages.reverse();
-        this.renderMessages();
+      const { default: api } = await import('../utils/api.js');
+      const response = await api.getChatSessions({ limit: 1 });
+      if (response.success && response.sessions.length > 0) {
+        const session = response.sessions[0];
+        const messagesRes = await api.getChatSession(session._id);
+        if (messagesRes.success) {
+          this.messages = messagesRes.messages;
+          this.renderMessages();
+        }
+      } else {
+        this.addWelcomeMessage();
       }
     } catch (error) {
       console.error('Chat history load error:', error);
@@ -213,15 +219,27 @@ export default {
     });
 
     try {
-      const response = await fetch('/api/chat/send', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ message: text })
-      });
-      const data = await response.json();
-      if (data.success) {
-        this.updateMessage(messageId, { status: 'sent' });
+      const { default: api } = await import('../utils/api.js');
+      // First ensure we have a session
+      let sessionRes = await api.getChatSessions({ limit: 1 });
+      let sessionId;
+      
+      if (sessionRes.success && sessionRes.sessions.length > 0) {
+        sessionId = sessionRes.sessions[0]._id;
+      } else {
+        const newSession = await api.createChatSession({ subject: 'Support', category: 'general' });
+        if (newSession.success) {
+          sessionId = newSession.session._id;
+        }
+      }
+      
+      if (sessionId) {
+        const response = await api.sendMessage(sessionId, text, 'chat');
+        if (response.success) {
+          this.updateMessage(messageId, { status: 'sent' });
+        } else {
+          this.updateMessage(messageId, { status: 'failed' });
+        }
       } else {
         this.updateMessage(messageId, { status: 'failed' });
       }

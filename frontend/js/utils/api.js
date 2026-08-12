@@ -131,6 +131,14 @@ class ApiClient {
   async getNetworks(currency) { return this.request(`/wallet/networks/${currency}`); }
   async getFees(currency) { return this.request(`/wallet/fees/${currency}`); }
 
+  // Payment (Fiat + Crypto)
+  async getPaymentMethods() { return this.request('/payment/methods'); }
+  async createDeposit(data) { return this.request('/payment/deposit', { method: 'POST', body: JSON.stringify(data) }); }
+  async createWithdrawalFiat(data) { return this.request('/payment/withdraw', { method: 'POST', body: JSON.stringify(data) }); }
+  async getTransactionHistory(params = {}) { const qs = new URLSearchParams(params).toString(); return this.request(`/payment/history?${qs}`); }
+  async simulateTransaction(id, action) { return this.request(`/payment/simulate/${id}`, { method: 'POST', body: JSON.stringify({ action }) }); }
+  async getCryptoAddresses() { return this.request('/payment/crypto-addresses'); }
+
   // Chat
   async createChatSession(data) { return this.request('/chat/session', { method: 'POST', body: JSON.stringify(data) }); }
   async getChatSessions(params = {}) { const qs = new URLSearchParams(params).toString(); return this.request(`/chat/sessions?${qs}`); }
@@ -141,6 +149,11 @@ class ApiClient {
   async closeSession(id) { return this.request(`/chat/sessions/${id}`, { method: 'DELETE' }); }
   async getFaq() { return this.request('/chat/faq'); }
   async getChatStatus() { return this.request('/chat/status'); }
+
+  // Public Chat (AI Community)
+  async getPublicMessages(params = {}) { const qs = new URLSearchParams(params).toString(); return this.request(`/public-chat/messages?${qs}`); }
+  async sendPublicMessage(message) { return this.request('/public-chat/messages', { method: 'POST', body: JSON.stringify({ message }) }); }
+  async getOnlineUsers() { return this.request('/public-chat/users-online'); }
 
   // User
   async getProfile() { return this.request('/user/profile'); }

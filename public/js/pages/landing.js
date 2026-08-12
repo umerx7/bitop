@@ -1,23 +1,24 @@
 export default {
   template: `
     <section class="hero" style="min-height:calc(100vh - var(--header-height) - var(--footer-height));display:flex;align-items:center;padding:100px 0;position:relative;overflow:hidden;">
-      <div class="container">
+      <div id="hero-3d-bg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></div>
+      <div class="container" style="position:relative;z-index:1;">
         <div class="grid grid-2" style="gap:80px;align-items:center;">
-          <div>
-            <div class="flex-center gap-2" style="margin-bottom:24px;justify-content:flex-start;">
+          <div style="text-align:center;">
+            <div class="flex-center gap-2" style="margin-bottom:24px;justify-content:center;">
               <span class="badge badge-gold" style="font-size:0.75rem;padding:8px 16px;font-weight:600;">✨ New: Zero-fee trading for your first 30 days</span>
             </div>
-            <h1 style="font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.05;margin-bottom:24px;letter-spacing:-0.02em;">
+            <h1 style="font-size:clamp(2rem,8vw,4.5rem);font-weight:800;line-height:1.1;margin-bottom:24px;letter-spacing:-0.02em;">
               Trade Crypto<br><span style="background:linear-gradient(135deg,#00d4ff 0%,#ffd700 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Like a Pro</span>
             </h1>
-            <p style="font-size:1.25rem;color:var(--text-secondary);line-height:1.7;margin-bottom:40px;max-width:540px;">
+            <p style="font-size:clamp(1rem,3vw,1.25rem);color:var(--text-secondary);line-height:1.7;margin-bottom:32px;max-width:540px;margin-left:auto;margin-right:auto;">
               Institutional-grade infrastructure. Deep liquidity. Advanced tools. Join 500,000+ traders on the platform built for professionals.
             </p>
-            <div class="flex-center gap-4 flex-wrap" style="margin-bottom:56px;">
-              <a href="/register" data-link class="btn btn-primary btn-lg" style="padding:16px 32px;font-size:1.0625rem;font-weight:600;">Get Started</a>
-              <a href="/markets" data-link class="btn btn-secondary btn-lg" style="padding:16px 32px;font-size:1.0625rem;font-weight:600;">Learn More</a>
+            <div class="flex-center gap-3 flex-wrap" style="margin-bottom:40px;justify-content:center;">
+              <a href="/register" data-link class="btn btn-primary btn-lg" style="padding:14px 28px;font-size:1rem;font-weight:600;">Get Started</a>
+              <a href="/markets" data-link class="btn btn-secondary btn-lg" style="padding:14px 28px;font-size:1rem;font-weight:600;">Learn More</a>
             </div>
-            <div class="flex-center gap-10 flex-wrap" style="color:var(--text-muted);font-size:0.875rem;">
+            <div class="flex-center gap-6 flex-wrap" style="color:var(--text-muted);font-size:0.8125rem;justify-content:center;">
               <div class="flex-center gap-2"><div class="status-dot success"></div><span>99.99% Uptime</span></div>
               <div class="flex-center gap-2"><div class="status-dot success"></div><span>Bank-grade Security</span></div>
               <div class="flex-center gap-2"><div class="status-dot success"></div><span>24/7 Support</span></div>
@@ -26,9 +27,9 @@ export default {
           </div>
           
           <div class="relative" style="display:flex;justify-content:center;">
-            <div style="position:relative;z-index:2;">
-              <div class="hero-trading-panel" style="width:100%;max-width:580px;background:var(--bg-card);border:1px solid var(--border-muted);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl),0 0 80px rgba(0,212,255,0.08);">
-                <div style="padding:16px 20px;border-bottom:1px solid var(--border-muted);display:flex;align-items:center;justify-content:space-between;background:var(--bg-secondary);">
+            <div style="position:relative;z-index:2;width:100%;max-width:580px;">
+              <div class="hero-trading-panel" style="width:100%;background:var(--bg-card);border:1px solid var(--border-muted);border-radius:var(--radius-xl);overflow:hidden;box-shadow:var(--shadow-xl),0 0 80px rgba(0,212,255,0.08);">
+                <div style="padding:16px 20px;border-bottom:1px solid var(--border-muted);display:flex;align-items:center;justify-content:space-between;background:var(--bg-secondary);flex-wrap:wrap;gap:8px;">
                   <div class="flex-center gap-2" style="color:var(--text-secondary);font-size:0.875rem;">
                     <span class="asset-badge">₿</span>
                     <span style="font-weight:600;">BTC/USDT</span>
@@ -36,33 +37,50 @@ export default {
                   </div>
                   <div class="flex-center gap-1" id="hero-timeframes"></div>
                 </div>
-                <div id="hero-chart" style="height:340px;position:relative;"></div>
+                <div id="hero-chart" style="height:300px;position:relative;"></div>
                 <div style="padding:20px;border-top:1px solid var(--border-muted);display:grid;grid-template-columns:1fr 1fr;gap:16px;">
                   <div class="flex-center gap-3" style="justify-content:flex-start;">
                     <div style="text-align:left;">
                       <p style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">Price</p>
-                      <p style="font-size:1.75rem;font-weight:700;font-family:var(--font-mono);" id="hero-price">$67,432.10</p>
+                      <p style="font-size:clamp(1.25rem,4vw,1.75rem);font-weight:700;font-family:var(--font-mono);" id="hero-price">$67,432.10</p>
                     </div>
                     <div style="width:1px;height:48px;background:var(--border-muted);"></div>
                     <div style="text-align:left;">
                       <p style="font-size:0.7rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;">24h Volume</p>
-                      <p style="font-size:1.125rem;font-weight:600;font-family:var(--font-mono);color:var(--text-secondary);" id="hero-volume">$28.4B</p>
+                      <p style="font-size:clamp(1rem,3vw,1.125rem);font-weight:600;font-family:var(--font-mono);color:var(--text-secondary);" id="hero-volume">$28.4B</p>
                     </div>
                   </div>
-                  <div class="flex-center gap-3" style="justify-content:flex-end;">
+                  <div class="flex-center gap-2" style="justify-content:flex-end;width:100%;">
                     <button class="btn btn-secondary btn-sm" style="width:100%;padding:12px;">Sell</button>
                     <button class="btn btn-primary btn-sm" style="width:100%;padding:12px;">Buy</button>
                   </div>
                 </div>
               </div>
               
-              <div class="live-price-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:24px;" id="live-price-strip"></div>
+              <div class="live-price-strip" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px;" id="live-price-strip"></div>
             </div>
             
             <div class="absolute -bottom-8 -right-8" style="width:280px;height:280px;background:linear-gradient(135deg,var(--accent-primary),var(--gold-primary));border-radius:50%;opacity:0.08;filter:blur(80px);pointer-events:none;"></div>
             <div class="absolute -top-16 -left-16" style="width:200px;height:200px;background:linear-gradient(135deg,var(--gold-primary),var(--accent-primary));border-radius:50%;opacity:0.06;filter:blur(80px);pointer-events:none;"></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="live-ticker" style="padding:24px 0;background:var(--bg-secondary);border-top:1px solid var(--border-muted);border-bottom:1px solid var(--border-muted);">
+      <div class="container">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;" id="ticker-bar"></div>
+      </div>
+    </section>
+
+    <section class="features" style="padding:100px 0;background:var(--bg-primary);">
+      <div class="container">
+        <div style="text-align:center;margin-bottom:64px;">
+          <span class="badge badge-gold" style="font-size:0.75rem;padding:8px 16px;margin-bottom:16px;display:inline-block;">Why Traders Choose BITOP</span>
+          <h2 style="font-size:clamp(2rem,4vw,3rem);font-weight:800;margin-bottom:16px;letter-spacing:-0.02em;">Built for Professionals</h2>
+          <p style="font-size:1.125rem;color:var(--text-secondary);max-width:680px;margin:0 auto;line-height:1.7;">Every feature engineered to give you an edge in the markets.</p>
+        </div>
+        <div class="grid grid-3" style="gap:24px;" id="features-grid"></div>
       </div>
     </section>
 
@@ -122,6 +140,7 @@ export default {
   `,
 
   async init() {
+    this.initThreeJSBackground();
     this.renderLivePriceStrip();
     this.renderTickerBar();
     this.renderFeatures();
@@ -129,6 +148,198 @@ export default {
     this.renderMarketsTable();
     this.initHeroChart();
     this.startPriceUpdates();
+    this.initScrollAnimations();
+    this.init3DTiltEffects();
+  },
+
+  initThreeJSBackground() {
+    // Dynamic import Three.js only when needed
+    import('three').then(THREE => {
+      const container = document.getElementById('hero-3d-bg');
+      if (!container) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 50;
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      // Create floating crypto coins as particles
+      const particlesGeometry = new THREE.BufferGeometry();
+      const particleCount = 80;
+      const positions = new Float32Array(particleCount * 3);
+      const colors = new Float32Array(particleCount * 3);
+      const sizes = new Float32Array(particleCount);
+      const velocities = new Float32Array(particleCount * 3);
+
+      const color1 = new THREE.Color(0x00d4ff);
+      const color2 = new THREE.Color(0xffd700);
+
+      for (let i = 0; i < particleCount; i++) {
+        positions[i * 3] = (Math.random() - 0.5) * 120;
+        positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
+        positions[i * 3 + 2] = (Math.random() - 0.5) * 60 - 20;
+
+        const color = color1.clone().lerp(color2, Math.random());
+        colors[i * 3] = color.r;
+        colors[i * 3 + 1] = color.g;
+        colors[i * 3 + 2] = color.b;
+
+        sizes[i] = Math.random() * 3 + 1;
+
+        velocities[i * 3] = (Math.random() - 0.5) * 0.02;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.02;
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.01;
+      }
+
+      particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+      particlesGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      particlesGeometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+      const particlesMaterial = new THREE.PointsMaterial({
+        size: 2,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.6,
+        sizeAttenuation: true,
+        blending: THREE.AdditiveBlending
+      });
+
+      const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+      scene.add(particles);
+
+      // Add some larger "coin" meshes
+      const coinGeometry = new THREE.CircleGeometry(2, 32);
+      const coinMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00d4ff,
+        transparent: true,
+        opacity: 0.15,
+        side: THREE.DoubleSide
+      });
+
+      const coins = [];
+      for (let i = 0; i < 5; i++) {
+        const coin = new THREE.Mesh(coinGeometry, coinMaterial.clone());
+        coin.position.set(
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 50,
+          -10 - Math.random() * 30
+        );
+        coin.rotation.x = -Math.PI / 2;
+        coin.userData = {
+          rotationSpeed: (Math.random() - 0.5) * 0.005,
+          floatOffset: Math.random() * Math.PI * 2,
+          floatSpeed: 0.002 + Math.random() * 0.003
+        };
+        coins.push(coin);
+        scene.add(coin);
+      }
+
+      // Mouse interaction
+      let mouseX = 0, mouseY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      });
+
+      // Animation loop
+      let time = 0;
+      const animate = () => {
+        requestAnimationFrame(animate);
+        time += 0.01;
+
+        // Animate particles
+        const posAttr = particlesGeometry.getAttribute('position');
+        for (let i = 0; i < particleCount; i++) {
+          posAttr.array[i * 3] += velocities[i * 3];
+          posAttr.array[i * 3 + 1] += velocities[i * 3 + 1];
+          posAttr.array[i * 3 + 2] += velocities[i * 3 + 2];
+
+          // Wrap around
+          if (posAttr.array[i * 3] > 60) posAttr.array[i * 3] = -60;
+          if (posAttr.array[i * 3] < -60) posAttr.array[i * 3] = 60;
+          if (posAttr.array[i * 3 + 1] > 40) posAttr.array[i * 3 + 1] = -40;
+          if (posAttr.array[i * 3 + 1] < -40) posAttr.array[i * 3 + 1] = 40;
+          if (posAttr.array[i * 3 + 2] > 40) posAttr.array[i * 3 + 2] = -40;
+          if (posAttr.array[i * 3 + 2] < -40) posAttr.array[i * 3 + 2] = 40;
+        }
+        posAttr.needsUpdate = true;
+
+        // Animate coins
+        coins.forEach((coin, i) => {
+          coin.rotation.z += coin.userData.rotationSpeed;
+          coin.position.y += Math.sin(time * coin.userData.floatSpeed + coin.userData.floatOffset) * 0.02;
+        });
+
+        // Mouse parallax
+        particles.rotation.y += (mouseX * 0.0003 - particles.rotation.y) * 0.05;
+        particles.rotation.x += (-mouseY * 0.0003 - particles.rotation.x) * 0.05;
+
+        renderer.render(scene, camera);
+      };
+      animate();
+
+      // Handle resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Store for cleanup
+      this.threeScene = { scene, camera, renderer, particles, particlesGeometry, coins };
+    }).catch(err => console.warn('Three.js not loaded:', err));
+  },
+
+  init3DTiltEffects() {
+    // 3D tilt effect for feature cards
+    document.querySelectorAll('.feature-card, .pricing-card').forEach(card => {
+      card.style.transformStyle = 'preserve-3d';
+      card.style.transition = 'transform 0.1s ease-out';
+      
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+      });
+    });
+  },
+
+  initScrollAnimations() {
+    // IntersectionObserver for scroll-triggered animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    // Observe all sections and cards
+    document.querySelectorAll('section > .container > *, .feature-card, .pricing-card, .hero-trading-panel').forEach((el, i) => {
+      el.classList.add('reveal');
+      el.style.transitionDelay = `${i * 50}ms`;
+      observer.observe(el);
+    });
   },
 
   renderLivePriceStrip() {
@@ -534,5 +745,18 @@ export default {
 
   destroy() {
     if (this.priceInterval) clearInterval(this.priceInterval);
+    if (this.threeScene) {
+      this.threeScene.renderer.dispose();
+      if (this.threeScene.particlesGeometry) {
+        this.threeScene.particlesGeometry.dispose();
+      }
+      if (this.threeScene.coins) {
+        this.threeScene.coins.forEach(coin => {
+          coin.geometry.dispose();
+          coin.material.dispose();
+        });
+      }
+      this.threeScene.renderer.domElement.remove();
+    }
   }
 };
